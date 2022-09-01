@@ -1,0 +1,11 @@
+include ':model'
+include ':network'
+include ':basic'
+include ':common'
+include ':loading'
+include ':lib-techain-release-3.5.9.1.2'
+include ':arouter'
+include ':annotation'
+include ':annotation_compiler'
+include ':app'
+rootProject.name = "Q10Technology"

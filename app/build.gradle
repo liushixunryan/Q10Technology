@@ -1,0 +1,93 @@
+import java.text.SimpleDateFormat
+
+plugins {
+    id 'com.android.application'
+}
+
+// 定义应用名称
+def appName = "BSTS"
+
+static def packageTime() {
+    return new SimpleDateFormat("yyyy-MM-dd").format(new Date())
+}
+
+android {
+    compileSdkVersion rootProject.ext.android.compileSdkVersion
+    buildToolsVersion rootProject.ext.android.buildToolsVersion
+
+    defaultConfig {
+        applicationId "cn.gulu.q10technology"
+        minSdkVersion rootProject.ext.android.minSdkVersion
+        targetSdkVersion rootProject.ext.android.targetSdkVersion
+        versionCode rootProject.ext.android.versionCode
+        versionName rootProject.ext.android.versionName
+        // 这里添加
+        multiDexEnabled true
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    signingConfigs {
+        config {
+            keyAlias keyAlias
+            keyPassword keyPassword
+            storeFile file('D:/AAA_lsx/04_program/allapp.jks')
+            storePassword storePassword
+        }
+    }
+
+    // 修改apk的名称和生成位置
+    android.applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "${appName}-${packageTime()}-${variant.buildType.name}.apk"
+        }
+        // 打包完成之后，将apk复制到指定目录
+        def outputFilePath = "${rootDir.absolutePath}/apk/$appName/${variant.buildType.name}"
+        File outputFile = new File(outputFilePath)
+        variant.assemble.doLast {
+            copy {
+                variant.outputs.all { file ->
+                    copy {
+                        from file.outputFile
+                        into outputFile
+                    }
+                }
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    //引入DataBinding
+    dataBinding {
+        enabled = true
+    }
+}
+
+dependencies {
+    implementation rootProject.ext.dependencies.publicImplementation
+
+    testImplementation rootProject.ext.dependencies.publictestImplementation
+    androidTestImplementation rootProject.ext.dependencies.publicandroidTestImplementation
+
+    if (!rootProject.ext.android.is_application) {
+//        implementation project(path: ':login')
+    }
+
+    rootProject.ext.dependencies.other.each {
+        implementation project(it)
+    }
+
+    //导入注解
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.3'
+    annotationProcessor project(path: ':annotation_compiler')
+}

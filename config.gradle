@@ -1,0 +1,42 @@
+ext {
+    android = [
+            //编译sdk版本
+            compileSdkVersion: 32,
+            //构建工具版本
+            buildToolsVersion: "32.0.0",
+            //最小sdk版本
+            minSdkVersion    : 20,
+            //目标sdk版本
+            targetSdkVersion : 32,
+            //版本号
+            versionCode      : 1,
+            //版本名
+            versionName      : "1.0",
+            //是否是开发模式
+            is_application   : false,
+
+    ]
+    dependencies = [
+            publicImplementation           : [
+                    'androidx.appcompat:appcompat:1.2.0',
+                    'androidx.constraintlayout:constraintlayout:2.0.4',
+                    'com.google.android.material:material:1.2.1'
+            ],
+            publicandroidTestImplementation: [
+                    'androidx.test.ext:junit:1.1.2',
+                    'androidx.test.espresso:espresso-core:3.3.0'
+            ],
+            publictestImplementation       : [
+                    'junit:junit:4.+'
+            ],
+            other                          : [
+                    ':basic',
+                    ':common',
+                    ':arouter',
+                    ':annotation',
+                    ':loading',
+                    ':network',
+                    ':model'
+            ]
+    ]
+}
